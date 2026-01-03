@@ -102,5 +102,14 @@ async fn fuzzel_collection() -> Result<oo7::dbus::Collection<'static>> {
             .await
             .context("Failed to create fuzzel-secrets collection")?,
     };
+
+    // Unlock the collection if it's locked
+    if collection.is_locked().await? {
+        collection
+            .unlock(None)
+            .await
+            .context("Failed to unlock collection")?;
+    }
+
     Ok(collection)
 }
